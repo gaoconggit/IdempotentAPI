@@ -9,8 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdempotentAPI.Cache.DistributedCache\IdempotentAPI.Cache.DistributedCache.csproj" />
-    <ProjectReference Include="..\IdempotentAPI\IdempotentAPI.csproj" />
+    <Reference Include="IdempotentAPI">
+      <HintPath>lib\IdempotentAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="IdempotentAPI.Cache">
+      <HintPath>lib\IdempotentAPI.Cache.dll</HintPath>
+    </Reference>
+    <Reference Include="IdempotentAPI.Cache.DistributedCache">
+      <HintPath>lib\IdempotentAPI.Cache.DistributedCache.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 
