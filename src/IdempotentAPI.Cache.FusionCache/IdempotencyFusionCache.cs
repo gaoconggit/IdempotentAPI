@@ -15,9 +15,9 @@ namespace IdempotentAPI.Cache.FusionCache
 
         /// <returns>An object of type <see cref="FusionCacheEntryOptions"/>.</returns>
         /// <inheritdoc/>
-        public object CreateCacheEntryOptions(int expireHours)
+        public object CreateCacheEntryOptions(int expireSeconds)
         {
-            return new FusionCacheEntryOptions(new TimeSpan(expireHours, 0, 0));
+            return new FusionCacheEntryOptions(new TimeSpan(expireSeconds, 0, 0));
         }
 
         /// <inheritdoc/>

@@ -8,6 +8,7 @@ namespace IdempotentAPI.Cache.DistributedCache
     public class IdempotencyDistributedCache : IIdempotencyCache
     {
         private readonly IDistributedCache _distributedCache;
+        private readonly string lockPrefix = "csredis_lock:";
 
         public IdempotencyDistributedCache(IDistributedCache distributedCache)
         {
@@ -16,11 +17,11 @@ namespace IdempotentAPI.Cache.DistributedCache
 
         /// <returns>An object of type <see cref="DistributedCacheEntryOptions"/>.</returns>
         /// <inheritdoc/>
-        public object CreateCacheEntryOptions(int expireHours)
+        public object CreateCacheEntryOptions(int expireSeconds)
         {
             return new DistributedCacheEntryOptions()
             {
-                AbsoluteExpirationRelativeToNow = new TimeSpan(expireHours, 0, 0)
+                AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, expireSeconds)
             };
         }
 
@@ -42,8 +43,13 @@ namespace IdempotentAPI.Cache.DistributedCache
                 throw new ArgumentNullException(nameof(options));
             }
 
-            using (var valuelocker = new ValueLocker(key))
+            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
             {
+                if (redisLock == null)
+                {
+                    return defaultValue;
+                }
+
                 byte[] cachedData = _distributedCache.Get(key);
                 return cachedData is null ? defaultValue : cachedData;
             }
@@ -66,8 +72,13 @@ namespace IdempotentAPI.Cache.DistributedCache
                 throw new ArgumentNullException(nameof(options));
             }
 
-            using (var valuelocker = new ValueLocker(key))
+            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
             {
+                if (redisLock == null)
+                {
+                    return defaultValue;
+                }
+
                 byte[] cachedData = _distributedCache.Get(key);
                 if (cachedData is null)
                 {
@@ -79,6 +90,7 @@ namespace IdempotentAPI.Cache.DistributedCache
                     return cachedData;
                 }
             }
+
         }
 
         /// <inheritdoc/>
@@ -98,9 +110,14 @@ namespace IdempotentAPI.Cache.DistributedCache
             {
                 throw new ArgumentNullException(nameof(options));
             }
-
-            using (var valuelocker = new ValueLocker(key))
+          
+            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
             {
+                if (redisLock == null)
+                {
+                    return;
+                }
+
                 _distributedCache.Set(key, value, (DistributedCacheEntryOptions?)options);
             }
         }

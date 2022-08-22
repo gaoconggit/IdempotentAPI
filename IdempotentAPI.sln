@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdempotentAPI.Cache.FusionC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdempotentAPI.Cache.DistributedCache", "src\IdempotentAPI.Cache.DistributedCache\IdempotentAPI.Cache.DistributedCache.csproj", "{685A12B9-8EC9-4600-BD71-4B81FA2E2C9C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi_3_1", "src\WebApi_3_1\WebApi_3_1.csproj", "{06C4AE0E-562D-471F-8B80-3FC4B811CDDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{685A12B9-8EC9-4600-BD71-4B81FA2E2C9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{685A12B9-8EC9-4600-BD71-4B81FA2E2C9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{685A12B9-8EC9-4600-BD71-4B81FA2E2C9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06C4AE0E-562D-471F-8B80-3FC4B811CDDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06C4AE0E-562D-471F-8B80-3FC4B811CDDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06C4AE0E-562D-471F-8B80-3FC4B811CDDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06C4AE0E-562D-471F-8B80-3FC4B811CDDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
