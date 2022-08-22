@@ -48,7 +48,7 @@ namespace WebApi_3_1.Controllers
         }
 
         [HttpPost]
-        [Idempotent(ExpireHours = 48)]
+        [Idempotent(ExpireSeconds = 3600)]
         public IActionResult Post([FromBody] SimpleRequest simpleRequest)
         {
             // Perform some simple input validations
@@ -68,10 +68,10 @@ namespace WebApi_3_1.Controllers
             {
                 Id = rng.Next(1000, 5000),
                 CreatedOn = DateTime.Now,
-                Message = $"A Simple string message (as created)!"
+                Message = $"{Guid.NewGuid().ToString("N")} A Simple string message (as created)!"
             };
 
-            return CreatedAtRoute("GetById", new { Id = simpleResponse.Id }, simpleResponse);
+            return Ok(simpleResponse);
         }
 
     }

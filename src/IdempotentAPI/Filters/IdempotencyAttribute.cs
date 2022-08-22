@@ -15,7 +15,7 @@ namespace IdempotentAPI.Filters
 
         public bool Enabled { get; set; } = true;
 
-        public int ExpireHours { get; set; } = 24;
+        public int ExpireSeconds { get; set; } = 3600;
 
         public string DistributedCacheKeysPrefix { get; set; } = "IdempAPI_";
 
@@ -26,7 +26,7 @@ namespace IdempotentAPI.Filters
             var distributedCache = (IIdempotencyCache)serviceProvider.GetService(typeof(IIdempotencyCache));
             var loggerFactory = (ILoggerFactory)serviceProvider.GetService(typeof(ILoggerFactory));
 
-            IdempotencyAttributeFilter idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, loggerFactory, Enabled, ExpireHours, HeaderKeyName, DistributedCacheKeysPrefix);
+            IdempotencyAttributeFilter idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, loggerFactory, Enabled, ExpireSeconds, HeaderKeyName, DistributedCacheKeysPrefix);
             return idempotencyAttributeFilter;
         }
     }

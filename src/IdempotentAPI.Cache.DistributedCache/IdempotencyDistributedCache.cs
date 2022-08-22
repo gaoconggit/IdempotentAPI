@@ -43,7 +43,7 @@ namespace IdempotentAPI.Cache.DistributedCache
                 throw new ArgumentNullException(nameof(options));
             }
 
-            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
+            using (var redisLock = RedisHelper.Lock(lockPrefix + key, 300))
             {
                 if (redisLock == null)
                 {
@@ -72,7 +72,7 @@ namespace IdempotentAPI.Cache.DistributedCache
                 throw new ArgumentNullException(nameof(options));
             }
 
-            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
+            using (var redisLock = RedisHelper.Lock(lockPrefix + key, 300))
             {
                 if (redisLock == null)
                 {
@@ -110,8 +110,8 @@ namespace IdempotentAPI.Cache.DistributedCache
             {
                 throw new ArgumentNullException(nameof(options));
             }
-          
-            using (var redisLock = RedisHelper.Lock(lockPrefix+key, 300))
+
+            using (var redisLock = RedisHelper.Lock(lockPrefix + key, 300))
             {
                 if (redisLock == null)
                 {
