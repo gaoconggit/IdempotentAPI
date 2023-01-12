@@ -1,0 +1,20 @@
+FROM swr.cn-north-1.myhuaweicloud.com/base-images/aspnetcoreruntime:3.1.15 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM swr.cn-north-1.myhuaweicloud.com/base-images/aspnetcoresdk:3.1 AS build
+WORKDIR /src
+COPY ["CommonServer.csproj", "CommonServer/"]
+RUN dotnet restore "CommonServer/CommonServer.csproj"
+COPY . ./CommonServer
+WORKDIR "/src/CommonServer"
+RUN dotnet build "CommonServer.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "CommonServer.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "CommonServer.dll"]

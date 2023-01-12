@@ -1,0 +1,3 @@
+﻿
+docker build -t  swr.cn-north-1.myhuaweicloud.com/iss-test/idempotent-test:1.1 -f Dockerfile ..\..\
+docker push swr.cn-north-1.myhuaweicloud.com/iss-test/idempotent-test:1.1
