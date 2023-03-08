@@ -38,7 +38,7 @@ namespace WebApi_3_1
             AddCSRedisCoreCache(services);
 
             // Register the IdempotentAPI.Cache.DistributedCache.
-            services.AddIdempotentAPIUsingDistributedCache();
+            //services.AddIdempotentAPIUsingDistributedCache();
 
             services.AddControllers();
         }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using IdempotentAPI.Filters;
 using WebApi_3_1.DTOs;
+using RMOHR.LimitReqRate.Filters;
 
 namespace WebApi_3_1.Controllers
 {
@@ -48,7 +48,7 @@ namespace WebApi_3_1.Controllers
         }
 
         [HttpPost]
-        [Idempotent(ExpireSeconds = 3600)]
+        [LimitReqRate(DistributedCacheKeysPrefix = "ioa-be", ExpireSeconds = 60, Times = 1)]
         public IActionResult Post([FromBody] SimpleRequest simpleRequest)
         {
             // Perform some simple input validations

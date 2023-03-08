@@ -155,7 +155,7 @@ namespace IdempotentAPI.xUnit.Filters
                 Mock.Of<Controller>()
             );
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(null, _loggerFactory, false, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(null, _loggerFactory, false, 1, _headerKeyName, _distributedCacheKeysPrefix,3600);
 
             // Act
             idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext);
@@ -184,7 +184,7 @@ namespace IdempotentAPI.xUnit.Filters
                 Mock.Of<Controller>()
             );
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(null, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(null, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix,3600);
 
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() => idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext));
@@ -232,7 +232,7 @@ namespace IdempotentAPI.xUnit.Filters
             expectedExceptionMessages.Add("The Idempotency header key is not found. (Parameter 'IdempotencyKey')");
 
             IIdempotencyCache distributedCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix,50);
 
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() => idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext));
@@ -283,7 +283,7 @@ namespace IdempotentAPI.xUnit.Filters
 
 
             IIdempotencyCache distributedCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix,50);
 
             // Act
             var ex = Assert.Throws<ArgumentNullException>(() => idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext));
@@ -334,7 +334,7 @@ namespace IdempotentAPI.xUnit.Filters
             expectedExceptionMessages.Add("Multiple Idempotency keys were found. (Parameter 'IdempotencyKey')");
 
             IIdempotencyCache distributedCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix,50);
 
             // Act
             var ex = Assert.Throws<ArgumentException>(() => idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext));
@@ -383,7 +383,7 @@ namespace IdempotentAPI.xUnit.Filters
             );
 
             IIdempotencyCache distributedCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
             // Act
             idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext);
@@ -439,7 +439,7 @@ namespace IdempotentAPI.xUnit.Filters
 
             IIdempotencyCache idempotencyCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
 
             // Act Part 1 (check cache):
@@ -508,7 +508,7 @@ namespace IdempotentAPI.xUnit.Filters
 
             IIdempotencyCache idempotencyCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
 
             // Act Part 1 (check cache):
@@ -573,7 +573,7 @@ namespace IdempotentAPI.xUnit.Filters
 
 
             IIdempotencyCache distributedCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(distributedCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
 
             // Act Part 1 (check cache):
@@ -673,9 +673,9 @@ namespace IdempotentAPI.xUnit.Filters
 
             IIdempotencyCache idempotencyCache = _sharedDistributedCache.GetIdempotencyCache(cacheImplementation);
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix,50);
 
-            var idempotencyAttributeFilterRequest2 = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilterRequest2 = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
             // Act Part 1 (check cache):
             idempotencyAttributeFilter.OnActionExecuting(actionExecutingContext);
@@ -774,7 +774,7 @@ namespace IdempotentAPI.xUnit.Filters
 
             IIdempotencyCache idempotencyCache = _sharedDistributedCache.GetIdempotencyCache(cacheImplementation);
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
 
             // Act
@@ -849,8 +849,8 @@ namespace IdempotentAPI.xUnit.Filters
 
             IIdempotencyCache idempotencyCache = MemoryDistributedCacheFixture.CreateCacheInstance(cacheImplementation);
 
-            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
-            var idempotencyAttributeFilterRequest2 = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix);
+            var idempotencyAttributeFilter = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
+            var idempotencyAttributeFilterRequest2 = new IdempotencyAttributeFilter(idempotencyCache, _loggerFactory, true, 1, _headerKeyName, _distributedCacheKeysPrefix, 50);
 
             // Act with concurrent requests (check cache):
             var firstRequestTask = Task.Run(() => idempotencyAttributeFilter.OnActionExecuting(firstRequestExecutingContext));

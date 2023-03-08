@@ -1,45 +1,43 @@
-﻿using IdempotentAPI.Core;
-using IdempotentAPI.Cache;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System;
+using System.Reflection;
 
-namespace IdempotentAPI.Filters
+namespace RMOHR.LimitReqRate.Filters
 {
-    public class IdempotencyAttributeFilter : IActionFilter, IResultFilter
+    public class LimitReqRateAttributeFilter : IActionFilter, IResultFilter
     {
         public bool Enabled { get; private set; }
         public int ExpireHours { get; private set; }
-        public string HeaderKeyName { get; private set; }
         public string DistributedCacheKeysPrefix { get; private set; }
 
+        public int Times { get; private set; }
 
-        private Idempotency? _idempotency = null;
 
-        private readonly IIdempotencyCache _distributedCache;
-        private readonly ILogger<Idempotency> _logger;
+        private LimitReqRate? _idempotency = null;
 
-        public IdempotencyAttributeFilter(
-            IIdempotencyCache distributedCache,
+        private readonly ILogger<LimitReqRate> _logger;
+
+        public LimitReqRateAttributeFilter(
             ILoggerFactory loggerFactory,
             bool Enabled,
             int ExpireHours,
-            string HeaderKeyName,
-            string DistributedCacheKeysPrefix)
+            string DistributedCacheKeysPrefix,
+            int times)
         {
-            _distributedCache = distributedCache;
             this.Enabled = Enabled;
             this.ExpireHours = ExpireHours;
-            this.HeaderKeyName = HeaderKeyName;
             this.DistributedCacheKeysPrefix = DistributedCacheKeysPrefix;
+            this.Times = times;
 
             if (loggerFactory != null)
             {
-                _logger = loggerFactory.CreateLogger<Idempotency>();
+                _logger = loggerFactory.CreateLogger<LimitReqRate>();
             }
             else
             {
-                _logger = NullLogger<Idempotency>.Instance;
+                _logger = NullLogger<LimitReqRate>.Instance;
             }
         }
 
@@ -49,6 +47,20 @@ namespace IdempotentAPI.Filters
         /// <param name="context"></param>
         public void OnActionExecuting(ActionExecutingContext context)
         {
+            string typeName = "WebApi_3_1.DTOs.SimpleRequest, WebApi_3_1"; // 要转换的类型字符串
+            Type type = Type.GetType(typeName);
+
+            var model = context.ActionArguments["simpleRequest"]; // 获取模型绑定的数据
+
+            if (model.GetType() == type)
+            {
+                //((WebApi_3_1.DTOs.SimpleRequest)model).Message
+                PropertyInfo propertyInfo = type.GetProperty("Message"); // 获取 MyProperty 属性的 PropertyInfo 对象
+                string value = (string)propertyInfo.GetValue(model); // 获取 MyProperty 的值
+                DistributedCacheKeysPrefix = value;
+            }
+
+            //if(model is SimpleRequest)
             // If the Idempotency is disabled then stop
             if (!Enabled)
             {
@@ -58,10 +70,10 @@ namespace IdempotentAPI.Filters
             // Initialize only on its null (in case of multiple executions):
             if (_idempotency == null)
             {
-                _idempotency = new Idempotency(_distributedCache, _logger, ExpireHours, HeaderKeyName, DistributedCacheKeysPrefix);
+                _idempotency = new LimitReqRate(_logger, ExpireHours, DistributedCacheKeysPrefix, Times);
             }
 
-            _idempotency.ApplyPreIdempotency(context);
+            _idempotency.ApplyPreHandle(context);
         }
 
         // NOT USED
@@ -82,19 +94,7 @@ namespace IdempotentAPI.Filters
         /// <param name="context"></param>
         public void OnResultExecuted(ResultExecutedContext context)
         {
-            // If the Idempotency is disabled then stop
-            if (!Enabled)
-            {
-                return;
-            }
 
-            // Stop if the PreIdempotency step is not applied:
-            if (_idempotency == null)
-            {
-                return;
-            }
-
-            _idempotency.ApplyPostIdempotency(context);
         }
     }
 }
