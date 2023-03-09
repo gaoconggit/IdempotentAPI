@@ -48,7 +48,7 @@ namespace WebApi_3_1.Controllers
         }
 
         [HttpPost]
-        [LimitReqRate(DistributedCacheKeysPrefix = "ioa-be", ExpireSeconds = 60, Times = 1)]
+        [LimitReqRate(ModelType = "WebApi_3_1.DTOs.SimpleRequest, WebApi_3_1", ModelArgumentName = "simpleRequest", ModelArgumentPropertyName = "Message", ExpireSeconds = 60, Times = 1, RedisLockTimeOutSeconds = 120)]
         public IActionResult Post([FromBody] SimpleRequest simpleRequest)
         {
             // Perform some simple input validations

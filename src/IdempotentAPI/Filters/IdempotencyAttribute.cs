@@ -19,14 +19,27 @@ namespace RMOHR.LimitReqRate.Filters
         public int Times { get; set; } = 50;
 
         public string DistributedCacheKeysPrefix { get; set; } = "IdempAPI_";
+        public int RedisLockTimeOutSeconds { get; set; } = 120;
 
+        public string ModelType { get; set; }
+        public string ModelArgumentName { get; set; }
+        public string ModelArgumentPropertyName { get; set; }
 
         public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
         {
-            //var distributedCache = (IIdempotencyCache)serviceProvider.GetService(typeof(IIdempotencyCache));
             var loggerFactory = (ILoggerFactory)serviceProvider.GetService(typeof(ILoggerFactory));
 
-            LimitReqRateAttributeFilter limitReqRateAttributeFilter = new LimitReqRateAttributeFilter(loggerFactory, Enabled, ExpireSeconds, DistributedCacheKeysPrefix, Times);
+            LimitReqRateAttributeFilter limitReqRateAttributeFilter = new LimitReqRateAttributeFilter(
+                loggerFactory,
+                Enabled,
+                ExpireSeconds,
+                DistributedCacheKeysPrefix,
+                Times,
+                ModelType,
+                ModelArgumentName,
+                ModelArgumentPropertyName,
+                RedisLockTimeOutSeconds);
+
             return limitReqRateAttributeFilter;
         }
     }

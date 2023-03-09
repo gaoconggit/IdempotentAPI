@@ -19,6 +19,7 @@ namespace RMOHR.LimitReqRate.Filters
         private readonly string _distributedCacheKeysPrefix;
         private readonly int _expireSeconds;
         private readonly int _times;
+        private readonly int _redisKeyTimeOutSeconds;
 
         private string DistributedCacheKey
         {
@@ -40,11 +41,13 @@ namespace RMOHR.LimitReqRate.Filters
             ILogger<LimitReqRate> logger,
             int expireSeconds,
             string distributedCacheKeysPrefix,
-            int times)
+            int times,
+            int redisKeyTimeOutSeconds)
         {
             _expireSeconds = expireSeconds;
             _times = times;
             _distributedCacheKeysPrefix = distributedCacheKeysPrefix;
+            _redisKeyTimeOutSeconds = redisKeyTimeOutSeconds;
         }
 
         private bool TryGetIdempotencyKey(HttpRequest httpRequest, out string idempotencyKey)
@@ -66,7 +69,7 @@ namespace RMOHR.LimitReqRate.Filters
                 return;
             }
 
-            using (var redisLock = RedisHelper.Lock(DistributedCacheKey+"_csredis_lock", 120))
+            using (var redisLock = RedisHelper.Lock(DistributedCacheKey+"_csredis_lock", _redisKeyTimeOutSeconds))
             {
 
                 if (redisLock == null)
